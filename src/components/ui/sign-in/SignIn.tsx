@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input } from "antd";
 
@@ -10,9 +10,16 @@ const onFinish = (values: any) => {
 type Props = {};
 
 const SignIn = (props: Props) => {
+  const [form] = Form.useForm();
+  const [clientReady, setClientReady] = useState<boolean>(false);
+
+  // To disable submit button at the beginning.
+  useEffect(() => {
+    setClientReady(true);
+  }, []);
   return (
     <div className="w-[30%] flex flex-col justify-center ">
-      <h1 className="text-blue-500">Sign In</h1>
+      <h1 className="text-blue-500 text-center">Sign In</h1>
       <Form
         name="normal_login"
         className="login-form"
@@ -38,9 +45,11 @@ const SignIn = (props: Props) => {
             placeholder="Password"
           />
         </Form.Item>
-        <Form.Item>
+        <Form.Item className="flex justify-between">
           <Form.Item name="remember" valuePropName="checked" noStyle>
-            <Checkbox>Remember me</Checkbox>
+            <Checkbox>
+              <span className="text-black dark:text-white">Remember me</span>
+            </Checkbox>
           </Form.Item>
 
           <a className="login-form-forgot" href="">
@@ -48,7 +57,7 @@ const SignIn = (props: Props) => {
           </a>
         </Form.Item>
 
-        <Form.Item>
+        <Form.Item className="flex justify-center">
           <Button
             type="primary"
             htmlType="submit"
@@ -56,7 +65,7 @@ const SignIn = (props: Props) => {
           >
             Log in
           </Button>
-          Or <a href="">register now!</a>
+          Or <a href="/sign-up">register now!</a>
         </Form.Item>
       </Form>
     </div>
