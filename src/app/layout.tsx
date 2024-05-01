@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { AntdRegistry } from "@ant-design/nextjs-registry";
+
 import Navbar from "@/components/ui/Navbar/Navbar";
 import { items } from "@/lib/items";
+import Providers from "@/providers/Providers";
+import toast, { Toaster } from "react-hot-toast";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,12 +21,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <AntdRegistry>
+      <Providers>
         <body className={inter.className}>
-          <Navbar items={items} />
+          <Toaster />
+          <Navbar />
+
           {children}
         </body>
-      </AntdRegistry>
+      </Providers>
     </html>
   );
 }

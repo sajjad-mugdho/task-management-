@@ -4,6 +4,8 @@ import { LockOutlined, UserOutlined, InboxOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input } from "antd";
 import Link from "next/link";
 import { on } from "events";
+import { FcGoogle } from "react-icons/fc";
+import toast from "react-hot-toast";
 
 const onFinish = (values: any) => {
   console.log("Received values of form: ", values);
@@ -24,34 +26,32 @@ const SignUp = (props: Props) => {
   const onFinish = async (values: any) => {
     console.log("Received values of form: ", values);
     const { username, email, password } = values;
+
     console.log(username, email, password);
+
+    const response = await fetch("/api/auth/sign-up", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ username, email, password }),
+    });
+
+    const data = await response.json();
+
+    console.log(data);
+
+    if (response.ok) {
+      toast.success(data.message);
+
+      form.resetFields();
+
+      localStorage.setItem("token", data.user);
+    } else {
+      console.log("Error");
+    }
   };
 
-  // const handleSignup = async (e ) => {
-  //   setisLoading(true);
-  //   e.preventDefault();
-  //   const form = e.target;
-  //   const name = form.name.value;
-  //   const email = form.email.value;
-  //   const password = form.password.value;
-  //   console.log(name, email, password);
-  //   try {
-  //     const response = await axios.post("/api/signup/signup", {
-  //       name,
-  //       email,
-  //       password,
-  //     });
-
-  //     console.log("Signup success:", response.data);
-  //     form.reset();
-  //     setisLoading(false);
-  //   } catch (error) {
-  //     console.error(
-  //       "Signup error:",
-  //       error.response?.data?.error || error.message
-  //     );
-  //   }
-  // };
   return (
     <div className="w-[30%] flex flex-col justify-center ">
       <h1 className="text-blue-500 text-center">Sign Up</h1>

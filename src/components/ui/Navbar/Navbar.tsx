@@ -15,7 +15,13 @@ type MenuItem = {
   path: string;
 };
 
-const Navbar = ({ items }: { items: MenuItem[] }) => {
+export const items: MenuItem[] = [
+  { key: "1", label: "Home", path: "/" },
+  { key: "2", label: "About", path: "/about-us" },
+  { key: "3", label: "Contact", path: "/contact-us" },
+];
+
+const Navbar = () => {
   const pathname = usePathname();
   return (
     <Layout>
@@ -44,8 +50,6 @@ const Navbar = ({ items }: { items: MenuItem[] }) => {
               <Link href={item.path}>{item.label}</Link>
             </Menu.Item>
           ))}
-
-          <Button type="primary">Sign In</Button>
         </Menu>
       </Header>
     </Layout>
