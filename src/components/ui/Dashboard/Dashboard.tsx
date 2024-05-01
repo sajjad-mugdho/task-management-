@@ -20,6 +20,7 @@ import type { SearchProps } from "antd/es/input/Search";
 import ProjectsForm from "../Forms/ProjectsForm";
 import { BsPlus } from "react-icons/bs";
 import ProjectCard from "../Card/ProjectCard";
+import { useRouter } from "next/navigation";
 
 const { Search } = Input;
 
@@ -32,6 +33,8 @@ type Props = {
 };
 
 const Dashboard = ({ params }: Props) => {
+  const router = useRouter();
+
   const [collapsed, setCollapsed] = useState(false);
 
   const [modal2Open, setModal2Open] = useState(false);
@@ -89,6 +92,16 @@ const Dashboard = ({ params }: Props) => {
       label: "",
     },
   ];
+
+  const handleLogout = async () => {
+    try {
+      localStorage.removeItem("user");
+
+      // Redirect to login page
+
+      router.push("/");
+    } catch (error) {}
+  };
   const url =
     "https://images.unsplash.com/photo-1636622433525-127afdf3662d?q=80&w=1632&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
   return (
@@ -118,7 +131,7 @@ const Dashboard = ({ params }: Props) => {
               </Menu.Item>
             ))}
 
-            <Menu.Item key="4" icon={<LogoutOutlined />}>
+            <Menu.Item onClick={handleLogout} key="4" icon={<LogoutOutlined />}>
               Logout
             </Menu.Item>
           </Menu>

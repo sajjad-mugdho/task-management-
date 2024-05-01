@@ -3,13 +3,9 @@ import React, { useEffect, useState } from "react";
 import { LockOutlined, UserOutlined, InboxOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input } from "antd";
 import Link from "next/link";
-import { on } from "events";
-import { FcGoogle } from "react-icons/fc";
-import toast from "react-hot-toast";
 
-const onFinish = (values: any) => {
-  console.log("Received values of form: ", values);
-};
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 type Props = {};
 
@@ -18,7 +14,10 @@ const SignUp = (props: Props) => {
   const [clientReady, setClientReady] = useState<boolean>(false);
   const [loading, setisLoading] = useState<boolean>(false);
 
+  const router = useRouter();
+
   // To disable submit button at the beginning.
+
   useEffect(() => {
     setClientReady(true);
   }, []);
@@ -46,7 +45,9 @@ const SignUp = (props: Props) => {
 
       form.resetFields();
 
-      localStorage.setItem("token", data.user);
+      localStorage.setItem("user", JSON.stringify(data.user));
+
+      router.push(`/dashboard/${data.user.id}`);
     } else {
       console.log("Error");
     }

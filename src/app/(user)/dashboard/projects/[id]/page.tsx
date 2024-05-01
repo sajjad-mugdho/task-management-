@@ -1,4 +1,5 @@
 import TaskDashboard from "@/components/ui/Dashboard/TaskDashboard";
+import PrivateRoute from "@/providers/PrivateRoute";
 import React from "react";
 
 type Props = {
@@ -10,7 +11,9 @@ type Props = {
 const page = ({ params }: Props) => {
   return (
     <div>
-      <TaskDashboard params={params} />
+      <PrivateRoute>
+        <TaskDashboard params={params} />
+      </PrivateRoute>
     </div>
   );
 };

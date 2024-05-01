@@ -1,5 +1,6 @@
 import React from "react";
 import Dashboard from "../../../../components/ui/Dashboard/Dashboard";
+import PrivateRoute from "@/providers/PrivateRoute";
 
 type Props = {
   params: {
@@ -11,7 +12,9 @@ const page = ({ params }: Props) => {
   const { id } = params;
   return (
     <div>
-      <Dashboard params={params} />
+      <PrivateRoute>
+        <Dashboard params={params} />
+      </PrivateRoute>
     </div>
   );
 };

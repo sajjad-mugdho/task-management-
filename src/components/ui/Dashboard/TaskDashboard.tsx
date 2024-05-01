@@ -17,11 +17,13 @@ import { Button, Layout, Menu, theme, Modal } from "antd";
 import { AudioOutlined } from "@ant-design/icons";
 
 import type { SearchProps } from "antd/es/input/Search";
-import ProjectsForm from "../Forms/ProjectsForm";
+
 import { BsPlus } from "react-icons/bs";
-import ProjectCard from "../Card/ProjectCard";
+
 import Columns from "@/components/Columns";
 import { useTaskStore } from "@/lib/store";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 const { Search } = Input;
 
@@ -33,14 +35,17 @@ type Props = {
   };
 };
 
-const TaskDashboard = (props: Props) => {
+const TaskDashboard = ({ params }: Props) => {
+  const { id } = params;
+  const router = useRouter();
+
   const addTask = useTaskStore((state) => state.addTask);
 
   const [collapsed, setCollapsed] = useState(false);
 
   const [modal2Open, setModal2Open] = useState(false);
 
-  const [projectsData, setProjectsData] = useState([]);
+  const [tasksData, setTasksData] = useState([]);
 
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -55,7 +60,28 @@ const TaskDashboard = (props: Props) => {
     />
   );
 
-  //   useEffect(() => {}, []);
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const response = await fetch(`/api/task/create/${id}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        const data = await response.json();
+
+        if (response.status === 200) {
+          setTasksData(data.tasks);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchTasks();
+  }, []);
 
   const onSearch: SearchProps["onSearch"] = (value, _e, info) =>
     console.log(info?.source, value);
@@ -71,16 +97,11 @@ const TaskDashboard = (props: Props) => {
       icon: <VideoCameraOutlined />,
       label: "Teams",
     },
-    {
-      key: "3",
-      icon: <UploadOutlined />,
-      label: "",
-    },
   ];
   const url =
     "https://images.unsplash.com/photo-1636622433525-127afdf3662d?q=80&w=1632&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const form = e.currentTarget;
@@ -90,6 +111,50 @@ const TaskDashboard = (props: Props) => {
     if (typeof title !== "string" || typeof description !== "string") return;
 
     addTask(title, description);
+
+    const data = {
+      title,
+      description,
+      id: params.id,
+    };
+
+    try {
+      const response = await fetch("/api/task/create", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      console.log(response);
+
+      if (response.status === 200) {
+        console.log("Task Created successfully");
+
+        toast.success("Task Created successfully");
+
+        form.reset();
+        setModal2Open(false);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Someting went wrong");
+    }
+  };
+
+  const user = localStorage.getItem("user");
+
+  const userObj = JSON.parse(user as string);
+
+  const handleLogout = async () => {
+    try {
+      localStorage.removeItem("user");
+
+      // Redirect to login page
+
+      router.push("/");
+    } catch (error) {}
   };
   return (
     <>
@@ -102,7 +167,9 @@ const TaskDashboard = (props: Props) => {
               </Space>
             </Space>
 
-            <div className="text-white text-center">User Name</div>
+            <div className="text-white text-base my-2 text-center">
+              {userObj?.username}
+            </div>
           </div>
           <Menu
             style={{
@@ -118,7 +185,7 @@ const TaskDashboard = (props: Props) => {
               </Menu.Item>
             ))}
 
-            <Menu.Item key="4" icon={<LogoutOutlined />}>
+            <Menu.Item onClick={handleLogout} key="4" icon={<LogoutOutlined />}>
               Logout
             </Menu.Item>
           </Menu>

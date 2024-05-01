@@ -6,10 +6,6 @@ import { BsInbox } from "react-icons/bs";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
-const onFinish = (values: any) => {
-  console.log("Received values of form: ", values);
-};
-
 type Props = {};
 
 const SignIn = (props: Props) => {
@@ -17,10 +13,6 @@ const SignIn = (props: Props) => {
   const [form] = Form.useForm();
   const [clientReady, setClientReady] = useState<boolean>(false);
 
-  //@typeignore
-  // const setUser = useUserStore((state: any) => state.setUser);
-
-  // To disable submit button at the beginning.
   useEffect(() => {
     setClientReady(true);
   }, []);
@@ -44,8 +36,8 @@ const SignIn = (props: Props) => {
     if (response.ok) {
       form.resetFields();
       toast.success(data.message);
-      localStorage.setItem("token", data.token);
-      // setUser(data.user);
+      localStorage.setItem("user", JSON.stringify(data.user));
+
       router.push(`/dashboard/${data.user.id}`);
     } else {
       console.log("Error");
