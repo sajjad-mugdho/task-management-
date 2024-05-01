@@ -17,6 +17,9 @@ const SignIn = (props: Props) => {
   const [form] = Form.useForm();
   const [clientReady, setClientReady] = useState<boolean>(false);
 
+  //@typeignore
+  // const setUser = useUserStore((state: any) => state.setUser);
+
   // To disable submit button at the beginning.
   useEffect(() => {
     setClientReady(true);
@@ -42,7 +45,7 @@ const SignIn = (props: Props) => {
       form.resetFields();
       toast.success(data.message);
       localStorage.setItem("token", data.token);
-
+      // setUser(data.user);
       router.push(`/dashboard/${data.user.id}`);
     } else {
       console.log("Error");

@@ -15,8 +15,6 @@ import {
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
-const { RangePicker } = DatePicker;
-
 const formItemLayout = {
   labelCol: {
     xs: { span: 24 },
@@ -28,17 +26,26 @@ const formItemLayout = {
   },
 };
 
-type Props = {};
+type Props = { params: { id: string } };
 
-const ProjectsForm = (props: Props) => {
+const ProjectsForm = ({ params }: Props) => {
   const router = useRouter();
+
+  const { id } = params;
   const onFinish = async (values: any) => {
-    console.log("Received values of form: ", values);
+    const { title, description, team, deadline } = values;
+    const data = {
+      title,
+      description,
+      team,
+      deadline,
+      id,
+    };
 
     try {
       const response = await fetch("/api/projects/create", {
         method: "POST",
-        body: JSON.stringify(values),
+        body: JSON.stringify(data),
         headers: {
           "Content-Type": "application/json",
         },

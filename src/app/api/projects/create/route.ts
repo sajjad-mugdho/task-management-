@@ -8,8 +8,14 @@ export async function POST(request: NextRequest) {
 
     console.log(requestData);
 
+    const { id, ...data } = requestData;
+
     const response = await db.project.create({
-      data: requestData,
+      data: {
+        ...data,
+        userId: id,
+      },
+
       include: {
         Task: true,
       },

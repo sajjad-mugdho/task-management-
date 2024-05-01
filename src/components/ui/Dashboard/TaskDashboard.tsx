@@ -20,6 +20,8 @@ import type { SearchProps } from "antd/es/input/Search";
 import ProjectsForm from "../Forms/ProjectsForm";
 import { BsPlus } from "react-icons/bs";
 import ProjectCard from "../Card/ProjectCard";
+import Columns from "@/components/Columns";
+import { useTaskStore } from "@/lib/store";
 
 const { Search } = Input;
 
@@ -31,7 +33,9 @@ type Props = {
   };
 };
 
-const Dashboard = ({ params }: Props) => {
+const TaskDashboard = (props: Props) => {
+  const addTask = useTaskStore((state) => state.addTask);
+
   const [collapsed, setCollapsed] = useState(false);
 
   const [modal2Open, setModal2Open] = useState(false);
@@ -91,6 +95,18 @@ const Dashboard = ({ params }: Props) => {
   ];
   const url =
     "https://images.unsplash.com/photo-1636622433525-127afdf3662d?q=80&w=1632&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    const { title, description } = Object.fromEntries(formData);
+
+    if (typeof title !== "string" || typeof description !== "string") return;
+
+    addTask(title, description);
+  };
   return (
     <>
       <Layout>
@@ -146,7 +162,7 @@ const Dashboard = ({ params }: Props) => {
             }}
           >
             <div className="flex flex-col md:flex-row lg:flex-row gap-3 items-center justify-between ">
-              <h3 className="text-2xl text-blue-500 font-bold">Projects</h3>
+              <h3 className="text-2xl text-blue-500 font-bold">Tasks</h3>
 
               <Space direction="vertical">
                 <Search
@@ -167,7 +183,7 @@ const Dashboard = ({ params }: Props) => {
                 type="default"
                 onClick={() => setModal2Open(true)}
               >
-                <BsPlus className="mx-1" /> Add Project
+                <BsPlus className="mx-1" /> Add Task
               </Button>
             </div>
 
@@ -179,16 +195,33 @@ const Dashboard = ({ params }: Props) => {
                 onOk={() => setModal2Open(false)}
                 onCancel={() => setModal2Open(false)}
               >
-                <ProjectsForm params={params} />
+                <div>
+                  <form
+                    id="todo-form"
+                    className="flex flex-col gap-3"
+                    onSubmit={handleSubmit}
+                  >
+                    <input
+                      id="title"
+                      name="title"
+                      placeholder="Todo title..."
+                    />
+                    <input
+                      id="description"
+                      name="description"
+                      placeholder="Description..."
+                    />
+
+                    <button type="submit" form="todo-form">
+                      Submit
+                    </button>
+                  </form>
+                </div>
               </Modal>
             </>
 
-            <div className="my-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-              {projectsData?.map((project: any) => (
-                <>
-                  <ProjectCard key={project.id} project={project} />
-                </>
-              ))}
+            <div className=" overflow-auto">
+              <Columns />
             </div>
           </Content>
         </Layout>
@@ -197,4 +230,4 @@ const Dashboard = ({ params }: Props) => {
   );
 };
 
-export default Dashboard;
+export default TaskDashboard;

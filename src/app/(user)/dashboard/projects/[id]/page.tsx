@@ -1,5 +1,5 @@
+import TaskDashboard from "@/components/ui/Dashboard/TaskDashboard";
 import React from "react";
-import Dashboard from "../../../../components/ui/Dashboard/Dashboard";
 
 type Props = {
   params: {
@@ -8,10 +8,9 @@ type Props = {
 };
 
 const page = ({ params }: Props) => {
-  const { id } = params;
   return (
     <div>
-      <Dashboard params={params} />
+      <TaskDashboard params={params} />
     </div>
   );
 };
