@@ -57,7 +57,6 @@ model Task {
   dueDate     DateTime?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-
-  project   Project? @relation(fields: [projectId], references: [id])
-  projectId String
+  project     Project?  @relation(fields: [projectId], references: [id])
+  projectId   String
 }

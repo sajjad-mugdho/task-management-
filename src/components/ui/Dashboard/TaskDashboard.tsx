@@ -42,8 +42,6 @@ const TaskDashboard = (props: Props) => {
 
   const [projectsData, setProjectsData] = useState([]);
 
-  console.log(projectsData);
-
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -57,21 +55,7 @@ const TaskDashboard = (props: Props) => {
     />
   );
 
-  useEffect(() => {
-    const fetchProjects = async () => {
-      const response = await fetch("/api/projects/create", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const data = await response.json();
-      console.log("Fetched data:", data); // Add this line to see what data you're receiving
-      setProjectsData(data.projects);
-    };
-
-    fetchProjects();
-  }, []);
+  //   useEffect(() => {}, []);
 
   const onSearch: SearchProps["onSearch"] = (value, _e, info) =>
     console.log(info?.source, value);
@@ -195,24 +179,38 @@ const TaskDashboard = (props: Props) => {
                 onOk={() => setModal2Open(false)}
                 onCancel={() => setModal2Open(false)}
               >
-                <div>
+                <div className="flex flex-col justify-center items-center my-5">
                   <form
                     id="todo-form"
-                    className="flex flex-col gap-3"
+                    className="flex flex-col gap-3 w-[70%]"
                     onSubmit={handleSubmit}
                   >
+                    <label className="text-lg " htmlFor="title">
+                      <span className="text-red-500">*</span> Title
+                    </label>
                     <input
                       id="title"
                       name="title"
                       placeholder="Todo title..."
+                      className="border border-gray-200 bg-slate-200 p-4 rounded-lg"
+                      required
                     />
+                    <label className="text-lg " htmlFor="title">
+                      <span className="text-red-500">*</span> Description
+                    </label>
                     <input
                       id="description"
                       name="description"
                       placeholder="Description..."
+                      className="border border-gray-200 bg-slate-200 p-4 rounded-lg"
+                      required
                     />
 
-                    <button type="submit" form="todo-form">
+                    <button
+                      className="p-3 m-5 border-none bg-blue-500 text-white rounded-xl"
+                      type="submit"
+                      form="todo-form"
+                    >
                       Submit
                     </button>
                   </form>
